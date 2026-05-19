@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+use App\Http\Controllers\Backend\EmployeeManagementController;
+
+// Protegemos la ruta para que solo usuarios logueados (auth) puedan entrar
+Route::middleware(['auth'])->prefix('empleado')->group(function () {
+    
+    // Esta ruta mostrará la pantalla de Figma
+    Route::get('/mis-pedidos', [EmployeeManagementController::class, 'index'])->name('empleado.pedidos');
+    
+});
