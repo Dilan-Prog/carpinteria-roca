@@ -306,45 +306,45 @@
         }
 
         /* ── BADGES DE ESTADO ── */
-.badge-pendiente {
-    background-color: #fdf8e8;
-    color: #f0a500;
-}
+        .badge-pendiente {
+            background-color: #fdf8e8;
+            color: #f0a500;
+        }
 
-.badge-inicio {
-    background-color: #e8f4fd;
-    color: #2196f3;
-}
+        .badge-inicio {
+            background-color: #e8f4fd;
+            color: #2196f3;
+        }
 
-.badge-corte {
-    background-color: #e8eef9;
-    color: #3f51b5;
-}
+        .badge-corte {
+            background-color: #e8eef9;
+            color: #3f51b5;
+        }
 
-.badge-armado {
-    background-color: #f3e8fd;
-    color: #9c27b0;
-}
+        .badge-armado {
+            background-color: #f3e8fd;
+            color: #9c27b0;
+        }
 
-.badge-lijado {
-    background-color: #fdf0e8;
-    color: #ff5722;
-}
+        .badge-lijado {
+            background-color: #fdf0e8;
+            color: #ff5722;
+        }
 
-.badge-pintado {
-    background-color: #fde8f0;
-    color: #e91e63;
-}
+        .badge-pintado {
+            background-color: #fde8f0;
+            color: #e91e63;
+        }
 
-.badge-listo {
-    background-color: #e8fdf0;
-    color: #4caf50;
-}
+        .badge-listo {
+            background-color: #e8fdf0;
+            color: #4caf50;
+        }
 
-.badge-cancelado {
-    background-color: #fde8e8;
-    color: #e63946;
-}
+        .badge-cancelado {
+            background-color: #fde8e8;
+            color: #e63946;
+        }
 
         /* ── ACCIONES ── */
         .acciones {
@@ -383,6 +383,7 @@
         }
     </style>
 </head>
+@include('admin.order.delete')
 
 <body>
 
@@ -481,18 +482,13 @@
                                         </svg>
                                     </button>
                                 </a>
-                                <form method="POST" action="/admin/orders/1"
-                                    onsubmit="return confirm('¿Estás seguro de eliminar este pedido?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-eliminar" title="Eliminar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -519,18 +515,13 @@
                                         </svg>
                                     </button>
                                 </a>
-                                <form method="POST" action="/admin/orders/1"
-                                    onsubmit="return confirm('¿Estás seguro de eliminar este pedido?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-eliminar" title="Eliminar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -556,18 +547,13 @@
                                         </svg>
                                     </button>
                                 </a>
-                                <form method="POST" action="/admin/orders/1"
-                                    onsubmit="return confirm('¿Estás seguro de eliminar este pedido?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-eliminar" title="Eliminar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -593,18 +579,13 @@
                                         </svg>
                                     </button>
                                 </a>
-                                <form method="POST" action="/admin/orders/1"
-                                    onsubmit="return confirm('¿Estás seguro de eliminar este pedido?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-eliminar" title="Eliminar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -613,7 +594,6 @@
         </div>
 
     </main>
-
 </body>
 
 </html>

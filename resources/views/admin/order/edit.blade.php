@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -162,8 +163,31 @@
         .btn-guardar:hover {
             background-color: #c1121f;
         }
+
+        .campo select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+            background-color: #fafafa;
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .campo select:focus {
+            outline: none;
+            border-color: #e63946;
+            background-color: #fff;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="modal">
@@ -216,11 +240,24 @@
             <label>Fecha estimada de entrega <span>*</span></label>
             <input type="date" required>
         </div>
+        <div class="campo">
+            <label>Estado del pedido <span>*</span></label>
+            <select>
+                <option value="" disabled selected>Selecciona una etapa</option>
+                <option value="inicio">Inicio</option>
+                <option value="corte">Corte</option>
+                <option value="armado">Armado</option>
+                <option value="lijado">Lijado</option>
+                <option value="pintado">Pintado</option>
+                <option value="listo">Listo para entregar</option>
+                <option value="cancelado">Cancelado</option>
+            </select>
+        </div>
 
         <!-- Botones -->
         <div class="modal-footer">
             <a href="/admin/orders" style="text-decoration: none;">
-             <button class="btn-cancelar">Cancelar</button>
+                <button class="btn-cancelar">Cancelar</button>
             </a>
             <button class="btn-guardar">Guardar cambios</button>
         </div>
@@ -228,4 +265,5 @@
     </div>
 
 </body>
+
 </html>
