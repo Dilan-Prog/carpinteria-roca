@@ -303,7 +303,53 @@
             line-height: 1.4;
         }
 
+        .alerta {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .alerta-exito {
+            background-color: #e8f6ed;
+            color: #2e7d32;
+            border-color: #cfead6;
+        }
+
+        .alerta-error {
+            background-color: #fde8e8;
+            color: #e63946;
+            border-color: #f5caca;
+        }
+
         /* ── BADGES DE ESTADO ── */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .badge-status-active {
+            background-color: #e8f6ed;
+            color: #2e7d32;
+        }
+
+        .badge-status-cancelled {
+            background-color: #fde8e8;
+            color: #e63946;
+        }
+
+        .badge-status-finished {
+            background-color: #eeeeee;
+            color: #6b6b6b;
+        }
+
         .badge-pendiente {
             background-color: #fdf8e8;
             color: #f0a500;
@@ -347,41 +393,60 @@
         /* ── ACCIONES ── */
         .acciones {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .btn-editar,
-        .btn-eliminar {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
+        .acciones form {
+            margin: 0;
+        }
+
+        .btn-accion {
+            border: 1px solid transparent;
+            padding: 6px 10px;
             border-radius: 6px;
-            transition: background-color 0.2s;
-            display: flex;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-ver {
+            color: #1a73e8;
+            border-color: #d6e4ff;
+            background-color: #f3f7ff;
         }
 
         .btn-editar {
-            color: #2196f3;
+            color: #2e7d32;
+            border-color: #cfead6;
+            background-color: #eefaf1;
         }
 
-        .btn-editar:hover {
-            background-color: #e8f4fd;
+        .btn-cancelar {
+            color: #f0a500;
+            border-color: #f6e2b6;
+            background-color: #fff7e1;
         }
 
         .btn-eliminar {
             color: #e63946;
+            border-color: #f5caca;
+            background-color: #fff0f1;
         }
 
-        .btn-eliminar:hover {
-            background-color: #fff0f1;
+        .sin-registros {
+            text-align: center;
+            padding: 24px;
+            color: #888;
         }
     </style>
 </head>
-@include('admin.order.delete')
 
 <body>
 
@@ -424,13 +489,21 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="contenido">
 
+        @if (session('success'))
+            <div class="alerta alerta-exito">{{ session('success') }}</div>
+        @endif
+
+        @if (session('error'))
+            <div class="alerta alerta-error">{{ session('error') }}</div>
+        @endif
+
         <!-- Header -->
         <div class="contenido-header">
             <div>
                 <h2>Gestión de Pedidos</h2>
-                <p>4 pedidos en total</p>
+                <p>{{ $orders->total() }} pedidos en total</p>
             </div>
-            <a href="/admin/orders/create" style="text-decoration: none;">
+            <a href="{{ route('admin.orders.create') }}" style="text-decoration: none;">
                 <button class="btn-nuevo">+ Nuevo Pedido</button>
             </a>
         </div>
@@ -451,147 +524,94 @@
                     <tr>
                         <th>Código</th>
                         <th>Cliente</th>
-                        <th>Descripción</th>
+                        <th>Teléfono</th>
                         <th>Costo Total</th>
+                        <th>Anticipo</th>
                         <th>Saldo</th>
+                        <th>Entrega Estimada</th>
                         <th>Estado</th>
-                        <th>Entrega</th>
+                        <th>Etapa</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="codigo">ORD-2026-001</td>
-                        <td>
-                            <div class="cliente-nombre">María González</div>
-                            <div class="cliente-tel">5551234567</div>
-                        </td>
-                        <td class="descripcion">Recámara King Size completa, incluye cabecera tapizada en tela gris,
-                            buró con 3 cajones</td>
-                        <td>$45,000</td>
-                        <td>$22,500</td>
-                        <td><span class="badge badge-inicio">Inicio</span></td>
-                        <td>14/05/2026</td>
-                        <td>
-                            <div class="acciones">
-                                <a href="/admin/orders/1/edit" style="text-decoration: none;">
-                                    <button class="btn-editar" title="Editar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                </a>
-                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="codigo">ORD-2026-002</td>
-                        <td>
-                            <div class="cliente-nombre">Carlos Ramírez</div>
-                            <div class="cliente-tel">5559876543</div>
-                        </td>
-                        <td class="descripcion">Sala de 3 piezas (sofá, loveseat y sillón) en tela beige con estructura
-                            de madera</td>
-                        <td>$38,000</td>
-                        <td>$19,000</td>
-                        <td><span class="badge badge-lijado">Lijado</span></td>
-                        <td>19/05/2026</td>
-                        <td>
-                            <div class="acciones">
-                                <a href="editar-pedido.html" style="text-decoration: none;">
-                                    <button class="btn-editar" title="Editar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                </a>
-                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="codigo">ORD-2026-003</td>
-                        <td>
-                            <div class="cliente-nombre">Ana Martínez</div>
-                            <div class="cliente-tel">5554567890</div>
-                        </td>
-                        <td class="descripcion">Recámara King Size completa, Tocador con espejo, 2 burós laterales</td>
-                        <td>$52,000</td>
-                        <td>$26,000</td>
-                        <td><span class="badge badge-listo">Listo para entregar</span></td>
-                        <td>19/04/2026</td>
-                        <td>
-                            <div class="acciones">
-                                <a href="editar-pedido.html" style="text-decoration: none;">
-                                    <button class="btn-editar" title="Editar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                </a>
-                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="codigo">ORD-2026-004</td>
-                        <td>
-                            <div class="cliente-nombre">Roberto López</div>
-                            <div class="cliente-tel">5552223333</div>
-                        </td>
-                        <td class="descripcion">Comedor de 6 sillas con mesa extensible de madera de pino</td>
-                        <td>$28,000</td>
-                        <td>$14,000</td>
-                        <td><span class="badge badge-pintado">Pintado</span></td>
-                        <td>09/05/2026</td>
-                        <td>
-                            <div class="acciones">
-                                <a href="editar-pedido.html" style="text-decoration: none;">
-                                    <button class="btn-editar" title="Editar">
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </button>
-                                </a>
-                                <button class="btn-eliminar" title="Eliminar" onclick="abrirModal(1)">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    @forelse ($orders as $order)
+                        @php
+                            $activeStage = $order->productionStages->firstWhere('state', 'en_proceso');
+                            $stageClassMap = [
+                                'inicio' => 'badge-inicio',
+                                'corte' => 'badge-corte',
+                                'armado' => 'badge-armado',
+                                'lijado' => 'badge-lijado',
+                                'pintado' => 'badge-pintado',
+                                'listo_para_entregar' => 'badge-listo',
+                            ];
+                            $stageLabelMap = [
+                                'inicio' => 'Inicio',
+                                'corte' => 'Corte',
+                                'armado' => 'Armado',
+                                'lijado' => 'Lijado',
+                                'pintado' => 'Pintado',
+                                'listo_para_entregar' => 'Listo para entregar',
+                            ];
+                            $stageClass = $activeStage ? ($stageClassMap[$activeStage->stage] ?? 'badge-pendiente') : 'badge-pendiente';
+                            $stageLabel = $activeStage ? ($stageLabelMap[$activeStage->stage] ?? 'En proceso') : 'Sin etapa';
+
+                            $statusClassMap = [
+                                'active' => 'badge-status-active',
+                                'cancelled' => 'badge-status-cancelled',
+                                'finished' => 'badge-status-finished',
+                            ];
+                            $statusLabelMap = [
+                                'active' => 'Activo',
+                                'cancelled' => 'Cancelado',
+                                'finished' => 'Finalizado',
+                            ];
+                            $statusClass = $statusClassMap[$order->status] ?? 'badge-status-finished';
+                            $statusLabel = $statusLabelMap[$order->status] ?? 'Finalizado';
+                        @endphp
+                        <tr>
+                            <td class="codigo">{{ $order->order_code }}</td>
+                            <td class="cliente-nombre">{{ $order->client_name }}</td>
+                            <td class="cliente-tel">{{ $order->client_phone }}</td>
+                            <td>${{ number_format($order->total_cost, 2, '.', ',') }}</td>
+                            <td>${{ number_format($order->advance_payment, 2, '.', ',') }}</td>
+                            <td>${{ number_format($order->remaining_balance, 2, '.', ',') }}</td>
+                            <td>{{ $order->estimated_delivery?->format('d/m/Y') ?? $order->estimated_delivery }}</td>
+                            <td><span class="badge {{ $statusClass }}">{{ $statusLabel }}</span></td>
+                            <td><span class="badge {{ $stageClass }}">{{ $stageLabel }}</span></td>
+                            <td>
+                                <div class="acciones">
+                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="btn-accion btn-ver">Ver</a>
+                                    @if ($order->canBeEdited())
+                                        <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn-accion btn-editar">Editar</a>
+                                    @endif
+                                    @if ($order->canBeCancelled())
+                                        <form method="POST" action="{{ route('admin.orders.cancel', $order->id) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn-accion btn-cancelar">Cancelar</button>
+                                        </form>
+                                    @endif
+                                    <form method="POST" action="{{ route('admin.orders.destroy', $order->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-accion btn-eliminar">Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td class="sin-registros" colspan="10">No hay pedidos registrados.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div style="margin-top: 16px;">
+            {{ $orders->links() }}
         </div>
 
     </main>

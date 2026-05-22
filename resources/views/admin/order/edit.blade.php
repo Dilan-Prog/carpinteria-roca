@@ -199,68 +199,60 @@
         </div>
 
         <!-- Formulario -->
-        <div class="campo">
-            <label>Código del pedido</label>
-            <input type="text" placeholder="Auto-generado por el sistema" disabled>
-        </div>
+        <form method="POST" action="{{ route('admin.orders.update', $order->id) }}">
+            @csrf
+            @method('PATCH')
 
-        <div class="campo">
-            <label>Nombre del cliente <span>*</span></label>
-            <input type="text" placeholder="Nombre completo" required>
-        </div>
-
-        <div class="campo">
-            <label>Número de teléfono <span>*</span></label>
-            <input type="tel" placeholder="5551234567" required>
-        </div>
-
-        <div class="campo">
-            <label>Descripción del producto <span>*</span></label>
-            <textarea placeholder="Describe el producto en detalle..." required></textarea>
-        </div>
-
-        <div class="campo">
-            <label>Costo total del pedido <span>*</span></label>
-            <div class="input-prefix">
-                <span>$</span>
-                <input type="number" placeholder="0.00" min="0" step="0.01" required>
+            <div class="campo">
+                <label>Código del pedido</label>
+                <input type="text" value="{{ $order->order_code }}" disabled>
             </div>
-        </div>
 
-        <div class="campo">
-            <label>Anticipo del pedido <span>*</span></label>
-            <div class="input-prefix">
-                <span>$</span>
-                <input type="number" placeholder="0.00" min="0" step="0.01" required>
+            <div class="campo">
+                <label>Nombre del cliente <span>*</span></label>
+                <input type="text" name="client_name" placeholder="Nombre completo" value="{{ old('client_name', $order->client_name) }}" required>
             </div>
-            <p class="nota">El anticipo debe ser al menos el 50% del costo total</p>
-        </div>
 
-        <div class="campo">
-            <label>Fecha estimada de entrega <span>*</span></label>
-            <input type="date" required>
-        </div>
-        <div class="campo">
-            <label>Estado del pedido <span>*</span></label>
-            <select>
-                <option value="" disabled selected>Selecciona una etapa</option>
-                <option value="inicio">Inicio</option>
-                <option value="corte">Corte</option>
-                <option value="armado">Armado</option>
-                <option value="lijado">Lijado</option>
-                <option value="pintado">Pintado</option>
-                <option value="listo">Listo para entregar</option>
-                <option value="cancelado">Cancelado</option>
-            </select>
-        </div>
+            <div class="campo">
+                <label>Número de teléfono <span>*</span></label>
+                <input type="tel" name="client_phone" placeholder="5551234567" value="{{ old('client_phone', $order->client_phone) }}" required>
+            </div>
 
-        <!-- Botones -->
-        <div class="modal-footer">
-            <a href="/admin/orders" style="text-decoration: none;">
-                <button class="btn-cancelar">Cancelar</button>
-            </a>
-            <button class="btn-guardar">Guardar cambios</button>
-        </div>
+            <div class="campo">
+                <label>Descripción del producto <span>*</span></label>
+                <textarea name="product_description" placeholder="Describe el producto en detalle..." required>{{ old('product_description', $order->product_description) }}</textarea>
+            </div>
+
+            <div class="campo">
+                <label>Costo total del pedido <span>*</span></label>
+                <div class="input-prefix">
+                    <span>$</span>
+                    <input type="number" name="total_cost" placeholder="0.00" min="0" step="0.01" value="{{ old('total_cost', $order->total_cost) }}" required>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>Anticipo del pedido <span>*</span></label>
+                <div class="input-prefix">
+                    <span>$</span>
+                    <input type="number" name="advance_payment" placeholder="0.00" min="0" step="0.01" value="{{ old('advance_payment', $order->advance_payment) }}" required>
+                </div>
+                <p class="nota">El anticipo debe ser al menos el 50% del costo total</p>
+            </div>
+
+            <div class="campo">
+                <label>Fecha estimada de entrega <span>*</span></label>
+                <input type="date" name="estimated_delivery" value="{{ old('estimated_delivery', $order->estimated_delivery?->format('Y-m-d') ?? $order->estimated_delivery) }}" required>
+            </div>
+
+            <!-- Botones -->
+            <div class="modal-footer">
+                <a href="{{ route('admin.orders.index') }}" style="text-decoration: none;">
+                    <button class="btn-cancelar" type="button">Cancelar</button>
+                </a>
+                <button class="btn-guardar" type="submit">Guardar cambios</button>
+            </div>
+        </form>
 
     </div>
 
