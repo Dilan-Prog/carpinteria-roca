@@ -9,12 +9,12 @@ class OrderController extends Controller
 {
     public function index()
     {
-        return view('admin.orders.index');
+        return view('admin.order.index');
     }
 
     public function create()
     {
-        return view('admin.orders.create');
+        return view('admin.order.create');
     }
 
     public function edit($id)

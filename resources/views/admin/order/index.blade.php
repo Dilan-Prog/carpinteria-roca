@@ -21,7 +21,7 @@
 
         /* ── SIDEBAR ── */
         .sidebar {
-            width: 56px;
+            width: 170px;
             background-color: #ffffff;
             border-right: 1px solid #e8e8e8;
             display: flex;
@@ -31,13 +31,8 @@
             top: 0;
             left: 0;
             height: 100vh;
-            transition: width 0.3s ease;
             overflow: hidden;
             z-index: 100;
-        }
-
-        .sidebar:hover {
-            width: 170px;
         }
 
         .sidebar-logo {
@@ -69,20 +64,11 @@
             font-size: 16px;
             font-weight: 800;
             color: #e63946;
-            opacity: 0;
-            transition: opacity 0.2s ease;
         }
 
         .sidebar-logo .logo-texto p {
             font-size: 11px;
             color: #888;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .sidebar:hover .logo-texto h2,
-        .sidebar:hover .logo-texto p {
-            opacity: 1;
         }
 
         .sidebar-menu {
@@ -106,11 +92,6 @@
         }
 
         .sidebar-menu a span {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .sidebar:hover .sidebar-menu a span {
             opacity: 1;
         }
 
@@ -146,15 +127,32 @@
         }
 
         .sidebar-footer a span {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .sidebar:hover .sidebar-footer a span {
             opacity: 1;
         }
 
         .sidebar-footer a:hover {
+            background-color: #f5f5f5;
+            color: #e63946;
+        }
+
+        .sidebar-logout {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            white-space: nowrap;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .sidebar-logout:hover {
             background-color: #f5f5f5;
             color: #e63946;
         }
@@ -409,14 +407,17 @@
         </nav>
 
         <div class="sidebar-footer">
-            <a href="#">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                    style="flex-shrink:0">
-                    <path
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
-                </svg>
-                <span>Cerrar Sesión</span>
-            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="sidebar-logout">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        style="flex-shrink:0">
+                        <path
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+                    </svg>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </form>
         </div>
     </aside>
 
