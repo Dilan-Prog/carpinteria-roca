@@ -1,18 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\Admin\OrderController;
 
 // Lista de pedidos
-Route::get('/admin/orders', function () {
-    return view('admin.order.index');
-});
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 
 // Nuevo pedido
-Route::get('/admin/orders/create', function () {
-    return view('admin.order.create');
-});
+Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
 
 // Editar pedido
-Route::get('/admin/orders/{id}/edit', function ($id) {
-    return view('admin.order.edit');
-});
+Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit');
