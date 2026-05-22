@@ -1,4 +1,20 @@
 <x-guest-layout>
+    <style>
+        .tab-panel {
+            opacity: 0;
+            transform: translateY(8px);
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.25s ease;
+        }
+
+        .tab-panel.is-active {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 1200px;
+        }
+    </style>
+
     <div class="w-full max-w-md mx-auto">
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
 
@@ -23,19 +39,20 @@
                 >
                     Administrador / Empleado
                 </button>
-                <a
+                <button
                     id="tab-orders"
                     role="tab"
                     aria-selected="false"
-                    href="{{ Route::has('orders.guest') ? route('orders.guest') : '#' }}"
+                    aria-controls="panel-orders"
+                    onclick="switchTab('orders')"
                     class="flex-1 py-4 text-sm font-medium transition-colors text-center text-gray-500 hover:text-gray-700"
                 >
                     Consultar Pedido
-                </a>
+                </button>
             </div>
 
             {{-- Login Panel --}}
-            <div id="panel-login" role="tabpanel" aria-labelledby="tab-login" class="p-8">
+            <div id="panel-login" role="tabpanel" aria-labelledby="tab-login" class="tab-panel is-active p-8" aria-hidden="false">
                 <form method="POST" action="{{ route('login') }}" class="space-y-5">
                     @csrf
 
@@ -145,6 +162,52 @@
                     @endif
                 </form>
             </div>
+
+            {{-- Orders Panel --}}
+            <div id="panel-orders" role="tabpanel" aria-labelledby="tab-orders" class="tab-panel p-8" aria-hidden="true">
+                <form method="GET" action="{{ route('client.consultar') }}" class="space-y-5">
+                    <div>
+                        <label for="order_code" class="block text-sm font-medium text-gray-700 mb-2">
+                            Numero de pedido
+                        </label>
+                        <input
+                            id="order_code"
+                            name="codigo"
+                            type="text"
+                            value="{{ old('codigo') }}"
+                            required
+                            placeholder="Ejemplo: PED-000001"
+                            class="w-full px-4 py-3 border rounded-lg outline-none transition
+                                   focus:ring-2 focus:ring-[#E53935] focus:border-[#E53935] border-gray-300"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="client_phone" class="block text-sm font-medium text-gray-700 mb-2">
+                            Numero de telefono
+                        </label>
+                        <input
+                            id="client_phone"
+                            name="telefono"
+                            type="tel"
+                            value="{{ old('telefono') }}"
+                            required
+                            placeholder="Tu numero registrado"
+                            class="w-full px-4 py-3 border rounded-lg outline-none transition
+                                   focus:ring-2 focus:ring-[#E53935] focus:border-[#E53935] border-gray-300"
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-[#E53935] text-white py-3 rounded-lg font-medium
+                               hover:bg-[#C62828] transition-colors focus:outline-none
+                               focus:ring-2 focus:ring-offset-2 focus:ring-[#E53935]"
+                    >
+                        Consultar pedido
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -172,12 +235,29 @@
             // Only the login tab is interactive here; the orders tab is a plain link.
             // This function exists so it can be extended when the orders panel is added.
             const loginTab = document.getElementById('tab-login');
+            const ordersTab = document.getElementById('tab-orders');
+            const loginPanel = document.getElementById('panel-login');
+            const ordersPanel = document.getElementById('panel-orders');
+            const isLogin = tab === 'login';
 
-            if (tab === 'login') {
-                loginTab.classList.add('text-[#E53935]', 'border-b-2', 'border-[#E53935]', 'bg-red-50');
-                loginTab.classList.remove('text-gray-500');
-                loginTab.setAttribute('aria-selected', 'true');
-            }
+            loginTab.classList.toggle('text-[#E53935]', isLogin);
+            loginTab.classList.toggle('border-b-2', isLogin);
+            loginTab.classList.toggle('border-[#E53935]', isLogin);
+            loginTab.classList.toggle('bg-red-50', isLogin);
+            loginTab.classList.toggle('text-gray-500', !isLogin);
+            loginTab.setAttribute('aria-selected', isLogin ? 'true' : 'false');
+
+            ordersTab.classList.toggle('text-[#E53935]', !isLogin);
+            ordersTab.classList.toggle('border-b-2', !isLogin);
+            ordersTab.classList.toggle('border-[#E53935]', !isLogin);
+            ordersTab.classList.toggle('bg-red-50', !isLogin);
+            ordersTab.classList.toggle('text-gray-500', isLogin);
+            ordersTab.setAttribute('aria-selected', isLogin ? 'false' : 'true');
+
+            loginPanel.classList.toggle('is-active', isLogin);
+            loginPanel.setAttribute('aria-hidden', isLogin ? 'false' : 'true');
+            ordersPanel.classList.toggle('is-active', !isLogin);
+            ordersPanel.setAttribute('aria-hidden', isLogin ? 'true' : 'false');
         }
     </script>
 </x-guest-layout>

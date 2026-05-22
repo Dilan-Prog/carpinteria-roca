@@ -275,14 +275,14 @@
                         <label class="form-label fw-semibold">
                             <i class="fas fa-qrcode me-2"></i>Código del pedido
                         </label>
-                        <input type="text" name="codigo" class="form-control form-control-modern" 
+                        <input type="text" name="codigo" class="form-control form-control-modern"
                                placeholder="Ejemplo: 1, 2, 3..." required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-semibold">
                             <i class="fas fa-phone me-2"></i>Teléfono registrado
                         </label>
-                        <input type="tel" name="telefono" class="form-control form-control-modern" 
+                        <input type="tel" name="telefono" class="form-control form-control-modern"
                                placeholder="El número que usaste al hacer tu pedido" required>
                     </div>
                     <button type="submit" class="btn btn-modern">
@@ -290,38 +290,51 @@
                     </button>
                 </form>
 
-                @isset($pedido)
-                    <div class="result-card fade-in">
+                @isset($order)
+                    <div id="result-card" class="result-card" style="display: none;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge-custom 
-                                @if($pedido->estado == 'cancelado') badge-danger
-                                @elseif($pedido->estado == 'listo_para_entregar') badge-success
-                                @elseif(in_array($pedido->estado, ['corte', 'armado', 'lijado'])) badge-info
-                                @else badge-warning
-                                @endif">
-                                <i class="fas 
-                                    @if($pedido->estado == 'cancelado') fa-times-circle
-                                    @elseif($pedido->estado == 'listo_para_entregar') fa-check-circle
-                                    @else fa-spinner
-                                    @endif me-1"></i>
-                                {{ ucfirst($pedido->estado) }}
+                            @php
+                                $stages = $order->productionStages->sortBy('stage_order');
+                                $total = $stages->count();
+                                $terminadas = $stages->where('state', 'terminado')->count();
+                                $actual = $stages->firstWhere('state', 'en_proceso');
+                                $porcentaje = $total > 0 ? round(($terminadas / $total) * 100) : 0;
+
+                                $etiquetas = [
+                                    'inicio' => 'Inicio',
+                                    'corte' => 'Corte',
+                                    'armado' => 'Armado',
+                                    'lijado' => 'Lijado',
+                                    'pintado' => 'Pintado',
+                                    'listo_para_entregar' => 'Listo',
+                                ];
+
+                                $labelEstado = match ($order->status) {
+                                    'active' => $etiquetas[$actual->stage ?? 'inicio'] ?? 'En proceso',
+                                    'cancelled' => 'Cancelado',
+                                    'finished' => 'Listo para entregar',
+                                    default => 'En proceso',
+                                };
+                                $badgeClase = match ($order->status) {
+                                    'cancelled' => 'badge-danger',
+                                    'finished' => 'badge-success',
+                                    default => 'badge-warning',
+                                };
+                            @endphp
+                            <span class="badge-custom {{ $badgeClase }}">
+                                <i class="fas fa-spinner me-1"></i>
+                                {{ $labelEstado }}
                             </span>
                             <small class="text-muted">
                                 <i class="far fa-calendar-alt me-1"></i>
-                                {{ \Carbon\Carbon::parse($pedido->fecha_estimada_entrega)->format('d/m/Y') }}
+                                {{ $order->estimated_delivery?->format('d/m/Y') ?? $order->estimated_delivery }}
                             </small>
                         </div>
 
-                        <h5 class="mb-2">{{ $pedido->nombre_cliente }}</h5>
+                        <h5 class="mb-2">{{ $order->client_name }}</h5>
                         <p class="text-muted small mb-3">
-                            <i class="fas fa-box me-1"></i> {{ $pedido->descripcion_producto }}
+                            <i class="fas fa-box me-1"></i> {{ $order->product_description }}
                         </p>
-
-                        @php
-                            $etapas = ['inicio', 'corte', 'armado', 'lijado', 'pintado', 'listo_para_entregar'];
-                            $indiceActual = array_search($pedido->estado, $etapas);
-                            $porcentaje = (($indiceActual + 1) / count($etapas)) * 100;
-                        @endphp
 
                         <div class="mt-3">
                             <div class="d-flex justify-content-between small mb-1">
@@ -334,27 +347,24 @@
                         </div>
 
                         <div class="etapas-container mt-3">
-                            @foreach($etapas as $index => $etapa)
-                                <div class="etapa-item 
-                                    @if($index < $indiceActual) completada 
-                                    @elseif($index == $indiceActual) actual 
-                                    @endif">
+                            @foreach($stages as $stage)
+                                <div class="etapa-item {{ $stage->state === 'terminado' ? 'completada' : '' }} {{ $stage->state === 'en_proceso' ? 'actual' : '' }}">
                                     <div class="dot"></div>
-                                    <div class="etapa-nombre">{{ ucfirst($etapa) }}</div>
+                                    <div class="etapa-nombre">{{ $etiquetas[$stage->stage] ?? $stage->stage }}</div>
                                 </div>
                             @endforeach
                         </div>
 
-                        @if($pedido->puedeCancelarse() && $pedido->estado != 'cancelado')
+                        @if($order->canBeCancelled() && $order->status !== 'cancelled')
                             <div class="alert alert-warning alert-modern mt-3 mb-3">
                                 <i class="fas fa-clock me-2"></i>
                                 Puedes cancelar tu pedido dentro de las primeras 48 horas.
                             </div>
-                            <form method="POST" action="{{ route('client.cancelar') }}" 
+                            <form method="POST" action="{{ route('client.cancelar') }}"
                                   onsubmit="return confirm('¿Estás segura de que quieres cancelar este pedido? Se te reembolsará el anticipo.')">
                                 @csrf
-                                <input type="hidden" name="codigo" value="{{ $pedido->id }}">
-                                <input type="hidden" name="telefono" value="{{ $pedido->telefono }}">
+                                <input type="hidden" name="codigo" value="{{ $order->order_code }}">
+                                <input type="hidden" name="telefono" value="{{ $order->client_phone }}">
                                 <button type="submit" class="btn btn-cancel">
                                     <i class="fas fa-trash-alt me-2"></i>Cancelar pedido
                                 </button>
@@ -366,11 +376,20 @@
         </div>
 
         <div class="footer-text">
-            <i class="fas fa-phone-alt"></i> 7341245678 | 
+            <i class="fas fa-phone-alt"></i> 7341245678 |
             <i class="far fa-clock"></i> Lun-Vie 8:00 - 18:00
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const resultCard = document.getElementById('result-card');
+            if (resultCard) {
+                resultCard.style.display = 'block';
+                resultCard.classList.add('fade-in');
+            }
+        });
+    </script>
 </body>
 </html>
