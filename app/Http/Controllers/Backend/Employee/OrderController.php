@@ -12,7 +12,7 @@ class OrderController extends Controller
     public function index()
     {
 
-        $orders = Order::where('empleado_id', Auth::id())->get();
+        $orders = Order::where('assigned_to', Auth::id())->get();
         return view('employe.order.index', compact('orders'));
     }
 
