@@ -145,7 +145,7 @@
                             </td>
                             <td class="py-6 px-8 text-center">
                                 @if ($order->status === 'active' && $activeStage)
-                                    <form method="POST" action="{{ url('/employee/pedidos/' . $activeStage->id . '/estado') }}">
+                                    <form method="POST" action="{{ route('employee.empleado.pedidos.updateStatus', $activeStage->id) }}">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 transition-all">

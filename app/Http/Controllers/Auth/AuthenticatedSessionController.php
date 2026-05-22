@@ -32,9 +32,9 @@ class AuthenticatedSessionController extends Controller
         $role = Auth::user()->role;
 
         $redirect = match($role) {
-            'admin'    => '/admin/orders',
-            'employee' => '/employee/orders',
-            'client'   => '/client/dashboard',
+            'admin'    => '/admin/pedidos',
+            'employee' => '/employee/pedidos',
+            'client'   => '/pedido',
             default    => RouteServiceProvider::HOME,
         };
 

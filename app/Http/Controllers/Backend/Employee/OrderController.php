@@ -13,7 +13,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('productionStages')
+        $orders = Order::where('status', 'active')
+            ->with('productionStages')
             ->orderBy('created_at', 'desc')
             ->get();
         return view('employe.order.index', compact('orders'));
@@ -31,7 +32,7 @@ class OrderController extends Controller
 
         $order = $stage->order;
         if (!$order || $order->status !== 'active') {
-            return back()->with('error', 'No es posible avanzar. El pedido no esta disponible para cambios.');
+            return back()->with('error', 'No es posible avanzar. El pedido no está disponible para cambios.');
         }
 
         if ($stage->stage_order > 1) {
